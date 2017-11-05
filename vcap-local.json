@@ -1,0 +1,25 @@
+{
+    "cloudantNoSQLDB": [
+        {
+            "credentials": {
+                "username": "1a1ff47d-a49d-4c62-9e88-84f631b2f983-bluemix",
+                "password": "e61e0b53df873d7f389122444aad17a4b8ba7652c4a1ef59c6d37d7d1d406c54",
+                "host": "1a1ff47d-a49d-4c62-9e88-84f631b2f983-bluemix.cloudant.com",
+                "port": 443,
+                "url": "https://1a1ff47d-a49d-4c62-9e88-84f631b2f983-bluemix:e61e0b53df873d7f389122444aad17a4b8ba7652c4a1ef59c6d37d7d1d406c54@1a1ff47d-a49d-4c62-9e88-84f631b2f983-bluemix.cloudant.com"
+            },
+            "syslog_drain_url": null,
+            "volume_mounts": [],
+            "label": "cloudantNoSQLDB",
+            "provider": null,
+            "plan": "Lite",
+            "name": "SamplefileuploadApplication-cloudantNoSQLDB",
+            "tags": [
+                "data_management",
+                "ibm_created",
+                "lite",
+                "ibm_dedicated_public"
+            ]
+        }
+    ]
+}
