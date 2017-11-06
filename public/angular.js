@@ -29,46 +29,30 @@ FileUpload.service('fileUpload', ['$http', function ($http) {
            .error(function(){
            });
         }
-       
-        $http.get("/api/files")
-      //  .success(function displayfiles(data, downloadurl) {
-          .success(function findfiles(data) {
-            $scope.findfiles = data;
-            console.log(data);
-        })
-        .error(function(data) {
-            console.log('Error: ' + data);
-        });
+        this.displayFiles = function(){
+			return $http.get();
+			//$http.get()
+			//	.success(function(data){
+			//	})
+			
+		}
+        
      }]);
-     FileUpload.controller('mainController', ['$scope', 'fileUpload', function($scope, fileUpload){
+     
+FileUpload.controller('mainController', ['$scope', 'fileUpload', function($scope, fileUpload){
         $scope.createFiles = function(){
            var file = $scope.filename;
            var uploadUrl = "/api/files";
            fileUpload.uploadFileToUrl(file, uploadUrl);
         };
-     //   $scope.findfiles = function(){
-     //      var data = $scope.findfiles;
-     //      var downloadurl = "/api/files";
-     //      fileupload.displayfiles(data, downloadurl);
-     //   };
+        $scope.findFiles = function(){
+          fileUpload.displayFiles().success(function(data) {
+		  //   $scope.files = data;
+          //    console.log(data);
+			//fileUpload.displayFiles();
+		     $scope.files = data;
+              console.log(data);
+		  })	
+        };
     }]);
-    
-    Filedownload.controller('controller', function($scope,$http) {
-
-    $scope.findfiles = [];
-
-    $http.get('/api/files').then(function(d)
-        {
-            console.log(d);
-            $scope.findfiles= d.data;
-        },function(err)
-        {
-            console.log(err);            }
-    )
-
-})
-
-
-
-
 

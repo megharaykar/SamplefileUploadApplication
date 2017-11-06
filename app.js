@@ -90,17 +90,18 @@ var upload = multer({ storage : storage }).single('file');
 // path : String
 //});
 
-app.get('/api/files', function(req, res){
+//app.get('/api/files', function(req, res){
 
-    db.list({include_docs:true}, function(err, data) {
-	
-	    //if(err)
-		//  res.send(err);
+    //db.list({include_docs:true}, function(err, data) {
+//	db.find({"selector":{"path":"/upload/"},"fields":["_id","filename","path"]}, function(err, files) {
+    //db.get("mydoc", function(err, data) {
+//	    if(err)
+//		  res.send(err);
 		  
 		//  res.json(files);
-		  console.log(data.value);
-	});
-});
+//		  console.log(err, files);
+//	});
+//});
 
 app.post('/api/files', function(req, res){
    
@@ -117,17 +118,65 @@ app.post('/api/files', function(req, res){
 	    }, function(err, files){
 		  if(err) 
 			res.send(err);
-    
-	    //    File.find(function(err, files) {
-		//      if(err)
-		//         res.send(err);
+        
+		db.index({
+    "index": {
+        "fields": ["_id","filename","path"]
+    },
+    "name" : "foo-index",
+    "type" : "json"
+  }, function(err, files){
+	   if(err)
+		  res.send(err);
+	  
+	    db.find({"selector":{"path":"/upload/"},"fields":["_id","filename","path"]}, function(err, files) {
+          if(err)
+	  	         res.send(err);
 			 
-		//         res.json(files);
-	    //    });
-	    });
+	  	         res.json(files);
+		  console.log(err, files);
+	   });
 		
+		});
+		
+	  }); 
+
+//    db.createIndex({
+//  index: {fields: ['_id', 'filename','path']}
+// }).then(function (err, files) {
+//  return db.find({
+//    "selector": 
+      
+//	  {"path": "/upload/"} 
+//      //console.log(err, files);
+	
+//  });
+//});
+	
 	})
    
+  });
+// });
+
+app.get('/api/files', function(req, res){
+
+    //db.list({include_docs:true}, function(err, data) {
+		
+		
+		
+	db.find(
+  //"index": { "fields": ["_id","filename","path"]},
+ // "path": "/uploads/",
+ // "type": "text"
+//}, function(err,files) {
+{"selector":{"path":"/upload/"},"fields":["_id","filename","path"]}, function(err, files) {
+    //db.get("mydoc", function(err, data) {
+	    if(err)
+		  res.send(err);
+		  
+		res.json(files);
+		  console.log(err, files);
+	});
 });
 
 app.get('/', function(req, res) {
