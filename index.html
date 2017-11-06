@@ -47,12 +47,14 @@
 	<div id="file-list" class="row">	
     <div class="panel-body" ng-app="FileUpload" ng-controller="mainController" ng-service="fileUpload">
 	     <table class= "table table-striped table-bordered">
-	        <thead><tr><th>Id</th><th>Filename</th><th>Path</th></tr></thead>
+	        <thead><tr><th>Id</th><th>Filename</th><th>Path</th><th>DownloadLink</th></tr></thead>
 	           <tbody>
 	                  <tr ng-repeat ="file in files">
 		                 <td>{{file._id}}</td>
 		                 <td>{{file.filename}}</td>
                          <td>{{file.path}}</td>
+						 <!--<td><b><a download= href='" +file.path + file.filename +"'>"+file.filename +"</a></b></td>-->
+						 <td><a download='' href='" +file.path+ file.filename+'">{{file.filename}}</a></td>
 						 <button type="submit" class="btn btn-primary btn-lg" ng-click="findFiles()">Display the files</button>
                          <!--<td>{{<a href="C:\Users\Megha\Desktop\FileUpload_Multer" FilenameName")%>"}}>Download</a></td>-->
                       </tr>

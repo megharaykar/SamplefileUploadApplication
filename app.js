@@ -22,10 +22,7 @@ var dbCredentials = {
 
 const path = require('path');
 
-//mongoose.connect('mongodb://localhost:27017/fileuploadmulter1');
-
 app.use(express.static(__dirname + '/public'));
-//app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({'extended' : 'true'}));
 app.use(bodyParser.json());
 app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
@@ -85,101 +82,54 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage : storage }).single('file');
 
-function processForm(){
-	var url = cloudantService.config.url;
-	url += "/my_sample_db/" + doc.id;
-	url += "/" + encodeURIComponent(req.file.originalname);
-	url += "?rev=" + doc.rev;
-	
-var headers = {
-	'Content-Type': req.file.mimetype,
-	'Content-Length': req.file.size
-};
 
-var requestOptions ={
-	url: url,
-	headers: headers,
-	body: req.file.buffer
-};
-
-request.put(requestOptions, function(err, response, body){
-	if(err){
-		res.send(err);
-	}
-	else{
-	   res.send(response);	
-	}
-});
-}
 
 app.post('/api/files', function(req, res){
    
-   upload(req, res, function(err){
+    upload(req, res, function(err){
 		if(err){
 			res.send(err);
 		}
 		
-	db.insert({
+	    db.insert({
 	      
 		  filename : req.file.originalname,
           path : "/upload/"
-	      //done : false
+	      
 	    }, function(err, files){
 		  if(err)
 			res.send(err);
         
 		db.index({
-    "index": {
-        "fields": ["_id","filename","path"]  
-    },
-    "name" : "foo-index",
-    "type" : "json"
-  }, function(err, files){
-	   if(err)
+           "index": {
+           "fields": ["_id","filename","path"]  
+        },
+           "name" : "foo-index",
+           "type" : "json"
+        }, function(err, files){
+	    if(err)
 		  res.send(err);
 	  
-	    db.find({"selector":{"path":"/upload/"},"fields":["_id","file","filename","path"]}, function(err, files) {
+	    db.find({"selector":{"path":"/uploads/"},"fields":["_id","file","filename","path","DownloadLink"]}, function(err, files) {
           if(err)
-	  	         res.send(err);
+	  	    res.send(err);
 			 
-	  	         res.json(files);
+	  	     res.json(files);
 		  console.log(err, files);
-	   });
+	    });
 		
 		});
 		
-	  }); 
-
-//    db.createIndex({
-//  index: {fields: ['_id', 'filename','path']}
-// }).then(function (err, files) {
-//  return db.find({
-//    "selector": 
-      
-//	  {"path": "/upload/"} 
-//      //console.log(err, files);
-	
-//  });
-//});
-	
-	})
+	    }); 
+    })
    
-  });
-// });
+});
+
 
 app.get('/api/files', function(req, res){
 
-    //db.list({include_docs:true}, function(err, data) {
-		
-		
-		
-	db.find(
-  //"index": { "fields": ["_id","filename","path"]},
- // "path": "/uploads/",
- // "type": "text"
-//}, function(err,files) {
-{"selector":{"path":"/upload/"},"fields":["_id","filename","path"]}, function(err, files) {
-    //db.get("mydoc", function(err, data) {
+db.find({"selector":{"path":"/uploads/"},"fields":["_id","filename","path","DownloadLink"]}, function(err, files) {
+    
 	    if(err)
 		  res.send(err);
 		  
@@ -193,4 +143,4 @@ app.get('/', function(req, res) {
 });
 
 app.listen(8002);
-console.log("App listening on port 8002");
+console.log("App listening on port 8080");
