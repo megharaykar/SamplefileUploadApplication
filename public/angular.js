@@ -30,7 +30,7 @@ FileUpload.service('fileUpload', ['$http', function ($http) {
            });
         }
         this.displayFiles = function(){
-			return $http.get();
+			return $http.get("/api/files");
 			//$http.get()
 			//	.success(function(data){
 			//	})
@@ -50,9 +50,14 @@ FileUpload.controller('mainController', ['$scope', 'fileUpload', function($scope
 		  //   $scope.files = data;
           //    console.log(data);
 			//fileUpload.displayFiles();
-		     $scope.files = data;
-              console.log(data);
-		  })	
+			console.log(data);
+			
+		     $scope.files = data.docs;
+			 console.log("$scope is:" + JSON.stringify($scope.files));
+              console.log("Inside findFiles");
+		  }).error(function(error) {
+			  console.log(error);
+		  })
         };
     }]);
 
