@@ -85,23 +85,32 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage : storage }).single('file');
 
-//var File = mongoose.model ('File', {
-//filename : String,
-// path : String
-//});
+function processForm(){
+	var url = cloudantService.config.url;
+	url += "/my_sample_db/" + doc.id;
+	url += "/" + encodeURIComponent(req.file.originalname);
+	url += "?rev=" + doc.rev;
+	
+var headers = {
+	'Content-Type': req.file.mimetype,
+	'Content-Length': req.file.size
+};
 
-//app.get('/api/files', function(req, res){
+var requestOptions ={
+	url: url,
+	headers: headers,
+	body: req.file.buffer
+};
 
-    //db.list({include_docs:true}, function(err, data) {
-//	db.find({"selector":{"path":"/upload/"},"fields":["_id","filename","path"]}, function(err, files) {
-    //db.get("mydoc", function(err, data) {
-//	    if(err)
-//		  res.send(err);
-		  
-		//  res.json(files);
-//		  console.log(err, files);
-//	});
-//});
+request.put(requestOptions, function(err, response, body){
+	if(err){
+		res.send(err);
+	}
+	else{
+	   res.send(response);	
+	}
+});
+}
 
 app.post('/api/files', function(req, res){
    
@@ -116,12 +125,12 @@ app.post('/api/files', function(req, res){
           path : "/upload/"
 	      //done : false
 	    }, function(err, files){
-		  if(err) 
+		  if(err)
 			res.send(err);
         
 		db.index({
     "index": {
-        "fields": ["_id","filename","path"]
+        "fields": ["_id","filename","path"]  
     },
     "name" : "foo-index",
     "type" : "json"
@@ -129,7 +138,7 @@ app.post('/api/files', function(req, res){
 	   if(err)
 		  res.send(err);
 	  
-	    db.find({"selector":{"path":"/upload/"},"fields":["_id","filename","path"]}, function(err, files) {
+	    db.find({"selector":{"path":"/upload/"},"fields":["_id","file","filename","path"]}, function(err, files) {
           if(err)
 	  	         res.send(err);
 			 
