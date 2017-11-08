@@ -53,8 +53,7 @@
 		                 <td>{{file._id}}</td>
 		                 <td>{{file.filename}}</td>
                          <td>{{file.path}}</td>
-						 <!--<td><b><a download= href='" +file.path + file.filename +"'>"+file.filename +"</a></b></td>-->
-						 <td><a download='' href='" +file.path+ file.filename+'">{{file.filename}}</a></td>
+					     <td><a download='' href="{{file.path}}/{{file.filename}}">{{file.filename}}</a></td>
 						 <button type="submit" class="btn btn-primary btn-lg" ng-click="findFiles()">Display the files</button>
                          <!--<td>{{<a href="C:\Users\Megha\Desktop\FileUpload_Multer" FilenameName")%>"}}>Download</a></td>-->
                       </tr>

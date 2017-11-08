@@ -1,11 +1,8 @@
 var express = require('express');
 var app = express();
 var multer = require('multer');
-//var mongoose = require('mongoose');
-//var morgan = require('morgan');
 var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
-//var Schema = mongoose.Schema;
 var multipart = require('connect-multiparty')
 var multipartMiddleware = multipart();
 var fs = require('fs');
@@ -71,9 +68,11 @@ function initDBConnection() {
 
 initDBConnection();
 
+app.use(express.static(__dirname + '/public/upload/'));
 var storage = multer.diskStorage({
 	destination: function (req, file, cb){
-		cb(null, 'uploads/')
+		//cb(null, './upload/')
+		cb(null, './upload')
 	},
 	filename: function(req, file, cb){
 		cb(null, file.originalname)
@@ -82,7 +81,7 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage : storage }).single('file');
 
-
+//app.use(express.static(__dirname + './upload'));
 
 app.post('/api/files', function(req, res){
    
@@ -92,11 +91,9 @@ app.post('/api/files', function(req, res){
 		}
 		
 	    db.insert({
-	      
-		  filename : req.file.originalname,
+	      filename : req.file.originalname,
           path : "/upload/"
-	      
-	    }, function(err, files){
+		}, function(err, files){
 		  if(err)
 			res.send(err);
         
@@ -110,7 +107,7 @@ app.post('/api/files', function(req, res){
 	    if(err)
 		  res.send(err);
 	  
-	    db.find({"selector":{"path":"/uploads/"},"fields":["_id","file","filename","path","DownloadLink"]}, function(err, files) {
+	    db.find({"selector":{"path":"/upload/"},"fields":["_id","filename","path"]}, function(err, files) {
           if(err)
 	  	    res.send(err);
 			 
@@ -125,10 +122,9 @@ app.post('/api/files', function(req, res){
    
 });
 
-
 app.get('/api/files', function(req, res){
 
-db.find({"selector":{"path":"/uploads/"},"fields":["_id","filename","path","DownloadLink"]}, function(err, files) {
+db.find({"selector":{"path":"/upload/"},"fields":["_id","filename","path"]}, function(err, files) {
     
 	    if(err)
 		  res.send(err);
@@ -142,5 +138,5 @@ app.get('/', function(req, res) {
         res.sendFile(__dirname +'/index.html');
 });
 
-app.listen(8002);
+app.listen(8080);
 console.log("App listening on port 8080");
